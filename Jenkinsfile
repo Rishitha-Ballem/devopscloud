@@ -60,18 +60,10 @@ pipeline {
 
     stage('Terraform: Deploy/Update ECS') {
       steps {
-        withCredentials([usernamePassword(
-          credentialsId: 'aws-username-pass-access-key',
-          usernameVariable: 'AWS_ACCESS_KEY_ID',
-          passwordVariable: 'AWS_SECRET_ACCESS_KEY'
-        )]) {
+       withAWS(credentials: 'aws-username-pass-access-key', region: 'ap-south-2') {
           dir("${TERRAFORM_DIR}") {
             echo "Running Terraform with image tag ${IMAGE_TAG}"
             sh """
-              export AWS_DEFAULT_REGION=${AWS_REGION}
-              export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
-              export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
-
               terraform init -reconfigure
               terraform plan -var="image_tag=${IMAGE_TAG}" -out=tfplan
               terraform apply -auto-approve tfplan
@@ -95,16 +87,16 @@ pipeline {
               for i in {1..5}; do
                 echo "Attempt \$i: Checking ALB..."
                 if curl -fs http://${albDns}; then
-                  echo "✅ ALB responded successfully"
+                  echo "ALB responded successfully"
                   exit 0
                 fi
                 sleep 10
               done
-              echo "❌ ALB not responding after multiple retries"
+              echo "ALB not responding after multiple retries"
               exit 1
             """
           } else {
-            echo "⚠️ No ALB DNS name found (Terraform output missing)"
+            echo "No ALB DNS name found (Terraform output missing)"
           }
         }
       }
