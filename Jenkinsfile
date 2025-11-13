@@ -65,7 +65,7 @@ pipeline {
             echo "Running Terraform with image tag ${IMAGE_TAG}"
             sh """
               terraform init -reconfigure
-              terraform plan -var="image_tag=${IMAGE_TAG}" -out=tfplan
+              terraform plan -parallelism=1 -var=image_tag=${GIT_COMMIT} -out=tfplan
               terraform apply -auto-approve tfplan
             """
           }
