@@ -46,7 +46,7 @@ pipeline {
     stage('Push Image to ECR') {
       steps {
         withCredentials([usernamePassword(
-          credentialsId: 'ws_ecr_access_key',
+          credentialsId: 'aws_ecr_access_key',
           usernameVariable: 'AWS_ACCESS_KEY_ID',
           passwordVariable: 'AWS_SECRET_ACCESS_KEY'
         )]) {
