@@ -3,7 +3,7 @@ pipeline {
 
   environment {
     AWS_REGION     = 'ap-south-2'
-    ECR_REPO       = '661979762009.dkr.ecr.ap-south-2.amazonaws.com/devops_ci_cd_final_prac_6_clean'
+    ECR_REPO       = '130358282811.dkr.ecr.ap-south-2.amazonaws.com/devops_ci_cd_final_prac_6_clean'
     TERRAFORM_DIR  = 'terraform/ecs-fargate'
   }
 
