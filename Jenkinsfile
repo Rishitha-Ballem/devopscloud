@@ -45,11 +45,7 @@ pipeline {
 
     stage('Push Image to ECR') {
       steps {
-        withCredentials([usernamePassword(
-          credentialsId: 'aws_ecr_access_key',
-          usernameVariable: 'AWS_ACCESS_KEY_ID',
-          passwordVariable: 'AWS_SECRET_ACCESS_KEY'
-        )]) {
+       withAWS(credentials: 'aws_ecr_access_key', region: 'ap-south-2') {
           echo "Logging into AWS ECR and pushing image..."
           sh """
             aws ecr get-login-password --region ${AWS_REGION} | \
